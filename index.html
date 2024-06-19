@@ -157,7 +157,7 @@
             .then(data => {
                 console.log(data);
                 // 在導向時加入 visitorId 和 groupNumber 到 URL
-                window.location.href = `/info.html?visitorId=${visitorId}&groupNumber=${groupNumber}`;
+                window.location.href = `/info.html/?visitorId=${visitorId}&groupNumber=${groupNumber}`;
             })
             .catch(error => console.error(error));
         }
