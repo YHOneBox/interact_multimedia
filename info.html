@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Info</title>
+</head>
+<body>
+    <div id="voteMessage"></div>
+
+    <script>
+        // 解析 URL 中的查詢參數來顯示投票信息
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            var visitorId = params.get('visitorId');
+            var groupNumber = params.get('groupNumber');
+            const voteMessage = document.getElementById('voteMessage');
+            
+            if (visitorId && groupNumber) {
+                localStorage.setItem('visitorId', visitorId);
+                localStorage.setItem('groupNumber', groupNumber);
+
+                
+                fetch('/hehe.json', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ visitorId, groupNumber })
+                }).then(response => response.text())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+                
+                voteMessage.innerHTML = `<p>Visitor ID: ${visitorId} has voted for Group ${groupNumber}.</p>`;
+
+                // 在5秒後重定向
+                setTimeout(function(){
+                    window.location.href = "/voted.html";
+                }, 5000);
+            } else {
+                fetch('/hehe.json')
+                .then(response => response.json())
+                .then(data => {
+                    if (data) {
+                        voteMessage.innerHTML = `<p>Visitor ID: ${data.visitorId} has voted for Group ${data.groupNumber}.</p>`;
+                    } else {
+                        voteMessage.innerHTML = `<p>No vote data available.</p>`;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        });
+    </script>
+
+</body>
+</html>
